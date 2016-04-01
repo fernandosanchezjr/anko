@@ -2,7 +2,7 @@
 package runtime
 
 import (
-	"github.com/mattn/anko/vm"
+	"github.com/fernandosanchezjr/anko/vm"
 	pkg "runtime"
 )
 

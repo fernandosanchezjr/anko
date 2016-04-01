@@ -5,7 +5,7 @@ import (
 	pkg "os"
 	"reflect"
 
-	"github.com/mattn/anko/vm"
+	"github.com/fernandosanchezjr/anko/vm"
 )
 
 func Import(env *vm.Env) *vm.Env {

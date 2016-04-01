@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mattn/anko/ast"
-	"github.com/mattn/anko/parser"
+	"github.com/fernandosanchezjr/anko/ast"
+	"github.com/fernandosanchezjr/anko/parser"
 )
 
 var (

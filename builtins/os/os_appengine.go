@@ -3,7 +3,7 @@
 package os
 
 import (
-	"github.com/mattn/anko/vm"
+	"github.com/fernandosanchezjr/anko/vm"
 )
 
 func handleAppEngine(m *vm.Env) {

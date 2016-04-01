@@ -8,7 +8,7 @@ import (
 	h "net/http"
 	"reflect"
 
-	"github.com/mattn/anko/vm"
+	"github.com/fernandosanchezjr/anko/vm"
 )
 
 type Client struct {

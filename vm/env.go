@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/mattn/anko/parser"
+	"github.com/fernandosanchezjr/anko/parser"
 )
 
 // Env provides interface to run VM. This mean function scope and blocked-scope.

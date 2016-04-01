@@ -7,8 +7,8 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/mattn/anko/parser"
-	"github.com/mattn/anko/vm"
+	"github.com/fernandosanchezjr/anko/parser"
+	"github.com/fernandosanchezjr/anko/vm"
 )
 
 func Import(env *vm.Env) *vm.Env {
