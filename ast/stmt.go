@@ -1,5 +1,29 @@
 package ast
 
+import (
+	"encoding/gob"
+)
+
+func init() {
+	gob.Register(&ExprStmt{})
+	gob.Register(&IfStmt{})
+	gob.Register(&TryStmt{})
+	gob.Register(&ForStmt{})
+	gob.Register(&CForStmt{})
+	gob.Register(&LoopStmt{})
+	gob.Register(&BreakStmt{})
+	gob.Register(&ContinueStmt{})
+	gob.Register(&ReturnStmt{})
+	gob.Register(&ThrowStmt{})
+	gob.Register(&ModuleStmt{})
+	gob.Register(&VarStmt{})
+	gob.Register(&SwitchStmt{})
+	gob.Register(&CaseStmt{})
+	gob.Register(&DefaultStmt{})
+	gob.Register(&LetsStmt{})
+	gob.Register([]Stmt{})
+}
+
 // Stmt provides all of interfaces for statement.
 type Stmt interface {
 	Pos

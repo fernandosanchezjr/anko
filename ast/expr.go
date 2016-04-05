@@ -1,5 +1,40 @@
 package ast
 
+import (
+	"encoding/gob"
+)
+
+func init() {
+	gob.Register([]string{})
+	gob.Register(&NumberExpr{})
+	gob.Register(&StringExpr{})
+	gob.Register(&ArrayExpr{})
+	gob.Register(&PairExpr{})
+	gob.Register(&MapExpr{})
+	gob.Register(&IdentExpr{})
+	gob.Register(&UnaryExpr{})
+	gob.Register(&AddrExpr{})
+	gob.Register(&DerefExpr{})
+	gob.Register(&ParenExpr{})
+	gob.Register(&BinOpExpr{})
+	gob.Register(&TernaryOpExpr{})
+	gob.Register(&CallExpr{})
+	gob.Register(&AnonCallExpr{})
+	gob.Register(&MemberExpr{})
+	gob.Register(&ItemExpr{})
+	gob.Register(&SliceExpr{})
+	gob.Register(&FuncExpr{})
+	gob.Register(&LetExpr{})
+	gob.Register(&LetsExpr{})
+	gob.Register(&AssocExpr{})
+	gob.Register(&NewExpr{})
+	gob.Register(&ConstExpr{})
+	gob.Register(&ChanExpr{})
+	gob.Register(&MakeChanExpr{})
+	gob.Register(Type{})
+	gob.Register([]Expr{})
+}
+
 // Expr provides all of interfaces for expression.
 type Expr interface {
 	Pos
