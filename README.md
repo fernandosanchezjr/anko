@@ -1,7 +1,14 @@
+# anko-serialized
+
+This is a fork of (anko)[https://github.com/mattn/anko] with the purpose of producing a completely-serializable
+interpreter (data and state). Other goals include fast performance and simple interoperation with native Go code.
+
+Hopefully, (mattn)[https://github.com/mattn] won't mind me looking at his bugfixes. lol
+
 # anko
 
-[![Build Status](https://travis-ci.org/mattn/anko.png?branch=master)](https://travis-ci.org/mattn/anko)
-[![GoDoc](https://godoc.org/github.com/mattn/anko/vm?status.svg)](https://godoc.org/github.com/mattn/anko/vm)
+[![Build Status](https://travis-ci.org/fernandosanchezjr/anko.png?branch=master)](https://travis-ci.org/fernandosanchezjr/anko)
+[![GoDoc](https://godoc.org/github.com/fernandosanchezjr/anko/vm?status.svg)](https://godoc.org/github.com/fernandosanchezjr/anko/vm)
 
 Anko is a scriptable interpreter written in Go.
 
@@ -27,7 +34,7 @@ func plus(n){
 x = 1
 y = x + 1
 
-# print values 
+# print values
 println(x * (y + 2 * x + plus(x) / 2))
 
 # if/else condition
@@ -71,7 +78,7 @@ if err != nil {
 	panic(err)
 }
 
-fmt.Println(val) 
+fmt.Println(val)
 // output:
 // 3
 ```
