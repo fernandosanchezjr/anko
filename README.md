@@ -1,9 +1,9 @@
 # anko-serialized
 
-This is a fork of (anko)[https://github.com/mattn/anko] with the purpose of producing a completely-serializable
+This is a fork of [anko](https://github.com/mattn/anko) with the purpose of producing a completely-serializable
 interpreter (data and state). Other goals include fast performance and simple interoperation with native Go code.
 
-Hopefully, (mattn)[https://github.com/mattn] won't mind me looking at his bugfixes. lol
+Hopefully, [mattn](https://github.com/mattn) won't mind me looking at his bugfixes. lol
 
 # anko
 
