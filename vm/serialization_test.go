@@ -181,7 +181,7 @@ var source []string = []string{
 	 }`}
 
 func TestParsedSourceSerialization(t *testing.T) {
-	for _, value := range(source) {
+	for _, value := range source {
 		st, err := parser.ParseSrc(value)
 		if err != nil {
 			t.Fatal(err)

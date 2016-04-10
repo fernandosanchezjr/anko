@@ -7,4 +7,3 @@ script:
     - go build
     - ./t/test.sh
     - ./anko ./_example/scripts/term.ank
-

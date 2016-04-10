@@ -303,32 +303,56 @@ func RunSingleStmt(stmt ast.Stmt, env *Env) (reflect.Value, error) {
 		if val.Kind() == reflect.Interface {
 			val = val.Elem()
 		}
-		if val.Kind() != reflect.Array && val.Kind() != reflect.Slice {
+		if val.Kind() != reflect.Array && val.Kind() != reflect.Slice && val.Kind() != reflect.Map {
 			return NilValue, NewStringError(stmt, "Invalid operation for non-array value")
 		}
 		newenv := env.NewEnv()
 		defer newenv.Destroy()
-
-		for i := 0; i < val.Len(); i++ {
-			iv := val.Index(i)
-			if val.Index(i).Kind() == reflect.Interface || val.Index(i).Kind() == reflect.Ptr {
-				iv = iv.Elem()
+		if val.Kind() == reflect.Map {
+			for _, key := range val.MapKeys() {
+				ikey := key
+				if key.Kind() == reflect.Interface || key.Kind() == reflect.Ptr {
+					ikey = ikey.Elem()
+				}
+				newenv.Define(stmt.Var, ikey)
+				rv, err := Run(stmt.Stmts, newenv)
+				if err != nil {
+					if err == BreakError {
+						err = nil
+						break
+					}
+					if err == ContinueError {
+						err = nil
+						continue
+					}
+					if err == ReturnError {
+						return rv, err
+					}
+					return rv, NewError(stmt, err)
+				}
 			}
-			newenv.Define(stmt.Var, iv)
-			rv, err := Run(stmt.Stmts, newenv)
-			if err != nil {
-				if err == BreakError {
-					err = nil
-					break
+		} else {
+			for i := 0; i < val.Len(); i++ {
+				iv := val.Index(i)
+				if val.Index(i).Kind() == reflect.Interface || val.Index(i).Kind() == reflect.Ptr {
+					iv = iv.Elem()
 				}
-				if err == ContinueError {
-					err = nil
-					continue
+				newenv.Define(stmt.Var, iv)
+				rv, err := Run(stmt.Stmts, newenv)
+				if err != nil {
+					if err == BreakError {
+						err = nil
+						break
+					}
+					if err == ContinueError {
+						err = nil
+						continue
+					}
+					if err == ReturnError {
+						return rv, err
+					}
+					return rv, NewError(stmt, err)
 				}
-				if err == ReturnError {
-					return rv, err
-				}
-				return rv, NewError(stmt, err)
 			}
 		}
 		return NilValue, nil
