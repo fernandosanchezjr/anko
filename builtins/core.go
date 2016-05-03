@@ -188,6 +188,14 @@ func Import(env *vm.Env) *vm.Env {
 	env.Define("println", fmt.Println)
 	env.Define("printf", fmt.Printf)
 
+	env.Define("delete", func(m interface{}, key interface{}) {
+		v := reflect.ValueOf(m)
+		if v.Kind() != reflect.Map {
+			panic(fmt.Errorf("delete() received an invalid map: %v", m))
+		}
+		v.SetMapIndex(reflect.ValueOf(key), reflect.Value{})
+	})
+
 	env.DefineType("int64", int64(0))
 	env.DefineType("float64", float64(0.0))
 	env.DefineType("bool", true)
