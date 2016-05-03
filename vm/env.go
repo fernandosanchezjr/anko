@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/fernandosanchezjr/anko/parser"
+	"sync"
 )
 
 // Env provides interface to run VM. This mean function scope and blocked-scope.
@@ -16,6 +17,7 @@ type Env struct {
 	typ       map[string]reflect.Type
 	parent    *Env
 	interrupt *bool
+	mutex     sync.Mutex
 }
 
 // NewEnv creates new global scope.
@@ -65,9 +67,13 @@ func (e *Env) NewPackage(n string) *Env {
 
 // Destroy deletes current scope.
 func (e *Env) Destroy() {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if e.parent == nil {
 		return
 	}
+	e.parent.mutex.Lock()
+	defer e.parent.mutex.Unlock()
 	for k, v := range e.parent.env {
 		if v.IsValid() && v.Interface() == e {
 			delete(e.parent.env, k)
@@ -101,6 +107,8 @@ func (e *Env) GetName() string {
 // Addr returns pointer value which specified symbol. It goes to upper scope until
 // found or returns error.
 func (e *Env) Addr(k string) (reflect.Value, error) {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if v, ok := e.env[k]; ok {
 		return v.Addr(), nil
 	}
@@ -113,6 +121,8 @@ func (e *Env) Addr(k string) (reflect.Value, error) {
 // Type returns type which specified symbol. It goes to upper scope until
 // found or returns error.
 func (e *Env) Type(k string) (reflect.Type, error) {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if v, ok := e.typ[k]; ok {
 		return v, nil
 	}
@@ -125,6 +135,8 @@ func (e *Env) Type(k string) (reflect.Type, error) {
 // Get returns value which specified symbol. It goes to upper scope until
 // found or returns error.
 func (e *Env) Get(k string) (reflect.Value, error) {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if v, ok := e.env[k]; ok {
 		return v, nil
 	}
@@ -137,6 +149,8 @@ func (e *Env) Get(k string) (reflect.Value, error) {
 // Set modifies value which specified as symbol. It goes to upper scope until
 // found or returns error.
 func (e *Env) Set(k string, v interface{}) error {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if _, ok := e.env[k]; ok {
 		val, ok := v.(reflect.Value)
 		if !ok {
@@ -153,6 +167,8 @@ func (e *Env) Set(k string, v interface{}) error {
 
 // DefineGlobal defines symbol in global scope.
 func (e *Env) DefineGlobal(k string, v interface{}) error {
+	e.parent.mutex.Lock()
+	defer e.parent.mutex.Unlock()
 	if e.parent == nil {
 		return e.Define(k, v)
 	}
@@ -161,6 +177,8 @@ func (e *Env) DefineGlobal(k string, v interface{}) error {
 
 // DefineType defines type which specifis symbol in global scope.
 func (e *Env) DefineType(k string, t interface{}) error {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if strings.Contains(k, ".") {
 		return fmt.Errorf("Unknown symbol '%s'", k)
 	}
@@ -180,6 +198,10 @@ func (e *Env) DefineType(k string, t interface{}) error {
 	if !ok {
 		typ = reflect.TypeOf(t)
 	}
+	if global != e {
+		global.mutex.Lock()
+		defer global.mutex.Unlock()
+	}
 	global.typ[strings.Join(keys, ".")] = typ
 
 	return nil
@@ -187,6 +209,8 @@ func (e *Env) DefineType(k string, t interface{}) error {
 
 // Define defines symbol in current scope.
 func (e *Env) Define(k string, v interface{}) error {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	if strings.Contains(k, ".") {
 		return fmt.Errorf("Unknown symbol '%s'", k)
 	}
@@ -205,6 +229,8 @@ func (e *Env) String() string {
 
 // Dump show symbol values in the scope.
 func (e *Env) Dump() {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
 	for k, v := range e.env {
 		fmt.Printf("%v = %#v\n", k, v)
 	}
