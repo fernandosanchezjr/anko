@@ -674,9 +674,6 @@ func invokeLetExpr(expr ast.Expr, rv reflect.Value, env *Env) (reflect.Value, er
 			return rv, nil
 		}
 		if v.Kind() == reflect.Map {
-			if i.Kind() != reflect.String {
-				return NilValue, NewStringError(expr, "Map key should be string")
-			}
 			v.SetMapIndex(i, rv)
 			return rv, nil
 		}
@@ -1003,10 +1000,11 @@ func invokeExpr(expr ast.Expr, env *Env) (reflect.Value, error) {
 			return v.Index(ii), nil
 		}
 		if v.Kind() == reflect.Map {
-			if i.Kind() != reflect.String {
-				return NilValue, NewStringError(expr, "Map key should be string")
+			if mv := v.MapIndex(i); mv.IsValid() {
+				return mv, nil
+			} else {
+				return reflect.Zero(v.Elem().Type()), nil
 			}
-			return v.MapIndex(i), nil
 		}
 		if v.Kind() == reflect.String {
 			rs := []rune(v.Interface().(string))
