@@ -34,13 +34,31 @@ func NewEnv() *Env {
 
 // NewEnv creates new child scope.
 func (e *Env) NewEnv() *Env {
-	return &Env{
+	ret := &Env{
 		env:       make(map[string]reflect.Value),
 		typ:       make(map[string]reflect.Type),
 		parent:    e,
 		name:      e.name,
 		interrupt: e.interrupt,
 	}
+	return ret
+}
+
+// NewEnv creates new child scope.
+func (e *Env) ForkEnv() *Env {
+	ret := &Env{
+		env:       make(map[string]reflect.Value),
+		typ:       make(map[string]reflect.Type),
+		name:      e.name,
+		interrupt: e.interrupt,
+	}
+	for k, v := range e.env {
+		ret.env[k] = v
+	}
+	for k, v := range e.typ {
+		ret.typ[k] = v
+	}
+	return ret
 }
 
 func NewPackage(n string) *Env {
